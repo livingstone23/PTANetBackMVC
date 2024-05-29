@@ -1,0 +1,6 @@
+@ACD.Api_HostAddress = http://localhost:5183
+
+GET {{ACD.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
