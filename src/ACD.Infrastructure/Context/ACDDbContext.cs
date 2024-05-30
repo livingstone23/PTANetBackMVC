@@ -74,7 +74,7 @@ public class ACDDbContext: DbContext
             .IsUnicode(false);
 
 
-        entity.Property(e => e.IsActive)
+        entity.Property(e => e.Active)
             .IsRequired();
 
 

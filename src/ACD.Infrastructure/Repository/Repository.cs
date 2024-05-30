@@ -24,6 +24,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
     protected readonly DbSet<TEntity> _dbSet;
 
     protected readonly ILogger<Repository<TEntity>> _logger;
+    
     private ACDDbContext context;
 
 

@@ -9,7 +9,7 @@ public class BalanceServiceProvider: Entity
 {
         
     /// <summary>
-    /// The unique identifier for the business.
+    /// The unique identifier for the business Id.
     /// </summary>
     public required string BusinessId { get; set; }
     
@@ -41,7 +41,7 @@ public class BalanceServiceProvider: Entity
     /// Indicates whether the entity is active or flagged for low-level deletion.
     /// </summary>
     /// <value></value>
-    public required bool IsActive { get; set; } = true;
+    public required bool Active { get; set; } = true;
 
 
     /// <summary>
