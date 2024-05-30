@@ -1,15 +1,11 @@
-﻿using ACD.Domain.Models;
-
-
-
-namespace ACD.Api.Dto;
+﻿namespace ACD.Api.Dto;
 
 
 
 /// <summary>
-/// Represents the data transfer object for the BalanceServiceProvider entity.
+/// Represents the response object for the BalanceServiceProvider entity geting from the web.
 /// </summary>
-public class BalanceServiceProviderDTO : Entity
+public class BalanceServiceProviderResponse
 {
 
 
@@ -17,49 +13,48 @@ public class BalanceServiceProviderDTO : Entity
     /// Property that represents the unique identifier for the business Id.
     /// </summary>
     /// <value></value>
-    public required string BusinessId { get; set; }
+    public string businessId { get; set; }
 
 
     /// <summary>
     /// Property that represents the code assigned to the BalanceServiceProvider.
     /// </summary>
     /// <value></value>
-    public required string BspCode { get; set; }
+    public string brpCode { get; set; }
 
 
     /// <summary>
     /// Property that represents the name of the BalanceServiceProvider.
     /// </summary>
     /// <value></value>
-    public required string BspName { get; set; }
-
-
-    /// <summary>
-    /// Property that represents the coding scheme used by the BalanceServiceProvider.
-    /// </summary>
-    /// <value></value>
-    public required string CodingScheme { get; set; }
+    public string brpName { get; set; }
 
 
     /// <summary>
     /// Property that represents the country associated with the BalanceServiceProvider.
     /// </summary>
     /// <value></value>
-    public required string Country { get; set; }
+    public string country { get; set; }
+
+
+    /// <summary>
+    /// Property that represents the coding scheme used by the BalanceServiceProvider.
+    /// </summary>
+    /// <value></value>
+    public string codingScheme { get; set; }
 
 
     /// <summary>
     /// Property that represents the value ValidityStart associated with the BalanceServiceProvider.
     /// </summary>
     /// <value></value>
-    public required DateTime ValidityStart { get; set; }
+    public DateTime validityStart { get; set; }
 
 
     /// <summary>
     /// Property that represents the value ValidityEnd associated with the BalanceServiceProvider.
     /// </summary>
-    /// <value></value>
-    public required DateTime ValidityEnd { get; set; }
+    public DateTime validityEnd { get; set; }
+
 
 }
-

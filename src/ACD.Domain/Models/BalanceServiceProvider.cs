@@ -7,31 +7,48 @@ namespace ACD.Domain.Models;
 /// </summary>
 public class BalanceServiceProvider: Entity
 {
-        
+    
+    
     /// <summary>
     /// The unique identifier for the business Id.
     /// </summary>
     public required string BusinessId { get; set; }
     
+
     /// <summary>
     /// The code assigned to the BalanceServiceProvider.
     /// </summary>
     public required string BspCode { get; set; }
     
+
     /// <summary>
     /// The name of the BalanceServiceProvider.
     /// </summary>
     public required string BspName { get; set; }
     
+
     /// <summary>
     /// The coding scheme used by the BalanceServiceProvider.
     /// </summary>
     public required string CodingScheme { get; set; }
+    
 
     /// <summary>
     /// The country associated with the BalanceServiceProvider.
     /// </summary>
     public required string Country { get; set; }
+
+
+    /// <summary>
+    /// The country associated with the BalanceServiceProvider.
+    /// </summary>
+    public required DateTime ValidityStart { get; set; }
+
+
+    /// <summary>
+    /// The country associated with the BalanceServiceProvider.
+    /// </summary>
+    public required DateTime ValidityEnd { get; set; }
 
 
 

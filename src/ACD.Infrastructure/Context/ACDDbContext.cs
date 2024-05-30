@@ -73,6 +73,13 @@ public class ACDDbContext: DbContext
             .HasMaxLength(10)
             .IsUnicode(false);
 
+        entity.Property(e => e.ValidityStart)
+            .IsRequired();
+
+
+        entity.Property(e => e.ValidityEnd)
+            .IsRequired();
+
 
         entity.Property(e => e.Active)
             .IsRequired();

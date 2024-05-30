@@ -1,13 +1,43 @@
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 using ACD.Infrastructure.Configuration;
+using Microsoft.OpenApi.Models;
+using Serilog;
+using System.Reflection;
+
+
+
+///Section to configure the log file    
+#region ConfigureLogFile
+
+var logFolder = "Logs";
+if (!Directory.Exists(logFolder))
+{
+    Directory.CreateDirectory(logFolder);
+}
+
+var currentDateTime = DateTime.Now.Date;
+var logFileName = $"Log_{currentDateTime:yyyy_MM_dd}.txt";
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Error() // <-- Sets the minimum log level to Error
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File($"{logFolder}/{logFileName}", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+Log.Information("Starting up");
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Enable using Serilog
+builder.Host.UseSerilog();
 
+
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 
@@ -18,7 +48,7 @@ builder.Services.AddSwaggerGen(opts =>
     //Enable Annotations
     opts.EnableAnnotations();
 
-    // Configurar la documentación XML
+    // Configure XML documentation
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     opts.IncludeXmlComments(xmlPath);
