@@ -76,22 +76,24 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
     }
 
 
+
     /// <summary>
     /// Retrieves all BalanceServiceProviders from the data repository.
     /// </summary>
     /// <returns>A collection of BalanceServiceProviders.</returns>
-    public async Task<IEnumerable<BalanceServiceProvider>> GetAll()
+    public async Task<Result<IEnumerable<BalanceServiceProvider>>> GetAll()
     {
         try
         {
 
-            return await _balanceServiceProviderRepository.GetAll();
+            var providers = await _balanceServiceProviderRepository.GetAll();
+            return Result<IEnumerable<BalanceServiceProvider>>.Success(providers);
 
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error occurred while getting all BalanceServiceProviders");
-            throw;
+            return Result<IEnumerable<BalanceServiceProvider>>.Failure("Error retrieving all balance service providers");
         }
     }
 
@@ -157,18 +159,20 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
     
 
 
-    public async Task<BalanceServiceProvider> GetById(int id)
+    public async Task<Result<BalanceServiceProvider>> GetById(int id)
     {
         try
         {
 
-            return await _balanceServiceProviderRepository.GetById(id);
-        
+            //return await _balanceServiceProviderRepository.GetById(id);
+            var provider = await _balanceServiceProviderRepository.GetById(id);
+            return provider == null ? Result<BalanceServiceProvider>.Failure("Provider not found") : Result<BalanceServiceProvider>.Success(provider);
+
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error occurred while getting BalanceServiceProviders by businessId");
-            throw;
+            return Result<BalanceServiceProvider>.Failure("Error retrieving balance service provider by ID");
         }
     }
 

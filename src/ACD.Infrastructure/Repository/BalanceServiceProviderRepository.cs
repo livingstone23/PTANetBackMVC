@@ -58,7 +58,6 @@ public class BalanceServiceProviderRepository : Repository<BalanceServiceProvide
 
     
 
-
     /// <summary>
     /// Retrieves a BalanceServiceProvider entity by the specified business ID.
     /// </summary>

@@ -18,7 +18,7 @@ public interface IBalanceServiceProviderService
     /// Retrieves all BalanceServiceProviders.
     /// </summary>
     /// <returns>A collection of BalanceServiceProviders.</returns>
-    Task<IEnumerable<BalanceServiceProvider>> GetAll();
+    Task<Result<IEnumerable<BalanceServiceProvider>>> GetAll();
 
 
     /// <summary>
@@ -26,7 +26,7 @@ public interface IBalanceServiceProviderService
     /// </summary>
     /// <param name="id">The unique identifier of the BalanceServiceProvider.</param>
     /// <returns>The BalanceServiceProvider with the specified identifier.</returns>
-    Task<BalanceServiceProvider> GetById(int id);
+    Task<Result<BalanceServiceProvider>> GetById(int id);
 
 
     /// <summary>

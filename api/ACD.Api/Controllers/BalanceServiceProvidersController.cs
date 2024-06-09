@@ -65,24 +65,28 @@ public class BalanceServiceProvidersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
-
         try
         {
 
-            var balanceServiceProviders = await _balanceServiceProviderService.GetAll();
+            var result = await _balanceServiceProviderService.GetAll();
 
-            if (balanceServiceProviders == null || !balanceServiceProviders.Any())
+            if (!result.IsSuccess)
+            {
+                _logger.LogError(result.Error);
+                return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
+            }
+
+            if (result.Value == null || !result.Value.Any())
             {
                 return NoContent();
             }
 
-            return Ok(_mapper.Map<IEnumerable<BalanceServiceProviderDTO>>(balanceServiceProviders));
-
+            return Ok(_mapper.Map<IEnumerable<BalanceServiceProviderDTO>>(result.Value));
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting balance service providers from database");
-            throw;
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
@@ -126,9 +130,7 @@ public class BalanceServiceProvidersController : ControllerBase
             var currentProviders = (_mapper.Map<IEnumerable<BalanceServiceProvider>>(balanceServiceProviders)).ToList();
 
 
-            //var existingProviders = await _balanceServiceProviderService.GetAll();
-            //var newProviders = await _balanceServiceProviderRepository.GetNewProviders(currentProviders);
-
+            // Get the new providers that are not already in the database
             var newProviders = await _balanceServiceProviderService.GetNewProviders(currentProviders);
 
 
@@ -173,21 +175,25 @@ public class BalanceServiceProvidersController : ControllerBase
 
         try
         {
+            var result = await _balanceServiceProviderService.GetById(id);
 
-            var balanceServiceProviders = await _balanceServiceProviderService.GetById(id);
+            if (!result.IsSuccess)
+            {
+                _logger.LogError(result.Error);
+                return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
+            }
 
-            if (balanceServiceProviders == null)
+            if (result.Value == null)
             {
                 return NoContent();
             }
 
-            return Ok(_mapper.Map<BalanceServiceProviderDTO>(balanceServiceProviders));
-
+            return Ok(_mapper.Map<BalanceServiceProviderDTO>(result.Value));
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error getting balance service providers from web page");
-            throw;
+            _logger.LogError(e, $"Error getting balance service provider with ID {id}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
