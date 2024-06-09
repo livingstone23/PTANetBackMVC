@@ -24,8 +24,7 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
     /// Initializes a new instance of the <see cref="BalanceServiceProviderService"/> class.
     /// </summary>
     /// <param name="balanceServiceProviderRepository">The repository used for data access operations.</param>
-    public BalanceServiceProviderService(IBalanceServiceProviderRepository balanceServiceProviderRepository, 
-                                        ILogger<BalanceServiceProviderService> logger
+    public BalanceServiceProviderService(IBalanceServiceProviderRepository balanceServiceProviderRepository, ILogger<BalanceServiceProviderService> logger
     )
     {
         _balanceServiceProviderRepository = balanceServiceProviderRepository;
@@ -140,12 +139,12 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
     }
 
 
-    public async Task<IEnumerable<BalanceServiceProvider>> GetBalanceServiceProviderGetByBusinessId(string businessId)
+    public async Task<BalanceServiceProvider> GetBalanceServiceProviderGetByBusinessId(string businessId)
     {
         try
         {
 
-            return await _balanceServiceProviderRepository.GetBalanceServiceProvidersByCountry(businessId);
+            return await _balanceServiceProviderRepository.GetByBusinessId(businessId);
         
         }
         catch (Exception e)
@@ -154,6 +153,8 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
             throw;
         }
     }
+
+    
 
 
     public async Task<BalanceServiceProvider> GetById(int id)
@@ -167,6 +168,20 @@ public class BalanceServiceProviderService : IBalanceServiceProviderService
         catch (Exception e)
         {
             _logger.LogError(e, "Error occurred while getting BalanceServiceProviders by businessId");
+            throw;
+        }
+    }
+
+
+    public async Task<IEnumerable<BalanceServiceProvider>> GetNewProviders(List<BalanceServiceProvider> currentProviders)
+    {
+        try
+        {
+            return await _balanceServiceProviderRepository.GetNewProviders(currentProviders);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred while getting BalanceServiceProviders in method GetNewProviders");
             throw;
         }
     }

@@ -1,4 +1,5 @@
 using ACD.Domain.Models;
+using System.Collections.Generic;
 
 
 
@@ -45,4 +46,11 @@ public interface IBalanceServiceProviderRepository: IRepository<BalanceServicePr
     Task<IEnumerable<BalanceServiceProvider>> GetBalanceServiceProvidersByCountry(string country);
 
 
+
+    /// <summary>
+    /// Retrieves BalanceServiceProviders by country from the repository.
+    /// </summary>
+    /// <param name="country">The country associated with the BalanceServiceProviders.</param>
+    /// <returns>A collection of BalanceServiceProviders from the specified country.</returns>
+    Task<IEnumerable<BalanceServiceProvider>> GetNewProviders(List<BalanceServiceProvider> currentProviders);
 }

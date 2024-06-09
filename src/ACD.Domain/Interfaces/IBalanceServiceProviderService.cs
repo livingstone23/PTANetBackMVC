@@ -54,7 +54,7 @@ public interface IBalanceServiceProviderService
 
 
     /// <summary>
-    /// Retrieves BalanceServiceProviders by country.
+    /// Retrieves List of BalanceServiceProviders by country.
     /// </summary>
     /// <param name="country">The country associated with the BalanceServiceProviders.</param>
     /// <returns>A collection of BalanceServiceProviders from the specified country.</returns>
@@ -62,11 +62,19 @@ public interface IBalanceServiceProviderService
 
 
     /// <summary>
-    /// Retrieves BalanceServiceProviders by business identifier.
+    /// Retrieve a BalanceServiceProviders by business identifier.
     /// </summary>
     /// <param name="businessId">The business identifier associated with the BalanceServiceProviders.</param>
     /// <returns>A collection of BalanceServiceProviders with the specified business identifier.</returns>
-    Task<IEnumerable<BalanceServiceProvider>> GetBalanceServiceProviderGetByBusinessId(string businessId);
+    Task<BalanceServiceProvider> GetBalanceServiceProviderGetByBusinessId(string businessId);
     
         
+
+    /// <summary>
+    /// Retrieve List of BalanceServiceProviders that are not already in the database.
+    /// </summary>
+    /// <param name="currentProviders"></param>
+    /// <returns></returns>
+    Task<IEnumerable<BalanceServiceProvider>> GetNewProviders(List<BalanceServiceProvider> currentProviders);
+
 }

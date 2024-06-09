@@ -18,6 +18,8 @@ namespace ACD.Infrastructure.Repository;
 public class BalanceServiceProviderRepository : Repository<BalanceServiceProvider>, IBalanceServiceProviderRepository
 {
 
+
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BalanceServiceProviderRepository"/> class.
     /// </summary>
@@ -27,6 +29,7 @@ public class BalanceServiceProviderRepository : Repository<BalanceServiceProvide
     {
         
     }
+    
 
 
     /// <summary>
@@ -53,6 +56,8 @@ public class BalanceServiceProviderRepository : Repository<BalanceServiceProvide
 
     }
 
+    
+
 
     /// <summary>
     /// Retrieves a BalanceServiceProvider entity by the specified business ID.
@@ -75,5 +80,41 @@ public class BalanceServiceProviderRepository : Repository<BalanceServiceProvide
         }
 
     }
+
+
+
+    /// <summary>
+    /// Compares the current list of Balance Service Providers with the existing ones in the database
+    /// and returns the providers that are not already in the database.
+    /// This method ensures that no duplicate records are created in the database.
+    /// </summary>
+    /// <param name="currentProviders">The current list of Balance Service Providers fetched from the web.</param>
+    /// <returns>A list of Balance Service Providers that do not exist in the database.</returns>
+    public async Task<IEnumerable<BalanceServiceProvider>> GetNewProviders(List<BalanceServiceProvider> currentProviders)
+    {
+        try
+        {
+            var existingProviders = await _dbSet.ToListAsync();
+            var existingBusinessIds = existingProviders.Select(p => p.BusinessId).ToHashSet();
+
+            var newProviders = currentProviders.Where(p => !existingBusinessIds.Contains(p.BusinessId));
+
+            if (newProviders.Any())
+            {
+                await _dbSet.AddRangeAsync(newProviders);
+                await SaveChanges();
+            }
+
+            return newProviders;
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error comparing balance service providers");
+            throw;
+        }
+    }
+
+
 
 }

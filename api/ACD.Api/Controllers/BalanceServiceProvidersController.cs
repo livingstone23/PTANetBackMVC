@@ -2,6 +2,7 @@
 using ACD.Api.Helper;
 using ACD.Domain.Interfaces;
 using ACD.Domain.Models;
+using ACD.Infrastructure.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,10 +21,13 @@ public class BalanceServiceProvidersController : ControllerBase
 {
 
 
+
     private readonly IBalanceServiceProviderService _balanceServiceProviderService;
     private readonly IMapper _mapper;
     private readonly ILogger<BalanceServiceProvidersController> _logger;
     private readonly ILogger<AcdHelper> _acdHelperLogger;
+
+
 
     /// <summary>
     /// Constructor of Balance Service Providers Controller
@@ -40,6 +44,7 @@ public class BalanceServiceProvidersController : ControllerBase
             _logger = logger;
             _acdHelperLogger = acdHelperLogger;
     }
+
 
 
     /// <summary>
@@ -82,6 +87,7 @@ public class BalanceServiceProvidersController : ControllerBase
     }
 
 
+
     /// <summary>
     /// Get all register of Balance Service Provider from the official Web "https://api.opendata.esett.com..."
     /// </summary>
@@ -117,22 +123,156 @@ public class BalanceServiceProvidersController : ControllerBase
                 return NoContent();
             }
 
-            var resul =(_mapper.Map<IEnumerable<BalanceServiceProvider>>(balanceServiceProviders));
+            var currentProviders = (_mapper.Map<IEnumerable<BalanceServiceProvider>>(balanceServiceProviders)).ToList();
 
-            
-            //TODO: Confirm beforte to Add that exist in the database by the BisnessId
-            foreach (var item in resul)
+
+            //var existingProviders = await _balanceServiceProviderService.GetAll();
+            //var newProviders = await _balanceServiceProviderRepository.GetNewProviders(currentProviders);
+
+            var newProviders = await _balanceServiceProviderService.GetNewProviders(currentProviders);
+
+
+
+            if (!newProviders.Any())
             {
-                await _balanceServiceProviderService.Add(item);
+                return NoContent();
             }
 
-            
-            return Ok(resul);
+            return Ok(newProviders);
 
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting balance service providers from web page");
+            throw;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Get a register by Id
+    /// </summary>
+    /// <remarks>
+    /// Get a register by Id
+    /// </remarks>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <response code="200">Success - JSON Array of BRPs</response>
+    /// <response code="204">If no data exists but the request is otherwise valid</response>
+    /// <response code="400">If validation failed for any reason</response>
+    /// <response code="500">Server Error</response>
+    [HttpGet]
+    [Route("GetById/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BalanceServiceProviderDTO))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetById(int id)
+    {
+
+        try
+        {
+
+            var balanceServiceProviders = await _balanceServiceProviderService.GetById(id);
+
+            if (balanceServiceProviders == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(_mapper.Map<BalanceServiceProviderDTO>(balanceServiceProviders));
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting balance service providers from web page");
+            throw;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Get a register by businessId
+    /// </summary>
+    /// <remarks>
+    /// Get a register by businessId
+    /// </remarks>
+    /// <param name="businessId"></param>
+    /// <returns></returns>
+    /// <response code="200">Success - JSON Array of BRPs</response>
+    /// <response code="204">If no data exists but the request is otherwise valid</response>
+    /// <response code="400">If validation failed for any reason</response>
+    /// <response code="500">Server Error</response>
+    [HttpGet]
+    [Route("GetByBusinessId/{businessId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BalanceServiceProviderDTO))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetByBusinessId(string businessId)
+    {
+
+        try
+        {
+
+            var balanceServiceProviders = await _balanceServiceProviderService.GetBalanceServiceProviderGetByBusinessId(businessId);
+
+            if (balanceServiceProviders == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(_mapper.Map<BalanceServiceProviderDTO>(balanceServiceProviders));
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting balance service providers from web page");
+            throw;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Get all register by CountryId
+    /// </summary>
+    /// <remarks>
+    /// Get all register by CountryId
+    /// </remarks>
+    /// <response code="200">Success - JSON Array of BRPs</response>
+    /// <response code="204">If no data exists but the request is otherwise valid</response>
+    /// <response code="400">If validation failed for any reason</response>
+    /// <response code="500">Server Error</response>
+    [HttpGet]
+    [Route("GetByCountryId")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BalanceServiceProviderDTO>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetByCountryId(string countryId)
+    {
+
+        try
+        {
+
+
+            var balanceServiceProviders = await _balanceServiceProviderService.GetBalanceServiceProviderByCountry(countryId);
+
+
+            if (balanceServiceProviders == null || !balanceServiceProviders.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(_mapper.Map<IEnumerable<BalanceServiceProviderDTO>>(balanceServiceProviders));
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting balance service providers from database");
             throw;
         }
     }
