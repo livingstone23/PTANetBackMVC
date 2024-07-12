@@ -2,7 +2,7 @@ using ACD.Infrastructure.Configuration;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
-
+using ACD.Api.Services.WhatsappCloud.SendMessage;
 
 
 ///Section to configure the log file    
@@ -38,12 +38,17 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 
 
+
+//Inject services
+builder.Services.AddSingleton<IWhatsappCloudSendMessage, WhatsappCloudSendMessage>();
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 
 builder.Services.AddSwaggerGen(opts =>
 {
-    opts.SwaggerDoc("v1", new OpenApiInfo { Title = "Alicunde API", Version = "v1" });
+    opts.SwaggerDoc("v1", new OpenApiInfo { Title = "LaConchaLora API Test con WhatsApp", Version = "v1" });
 
     //Enable Annotations
     opts.EnableAnnotations();
@@ -65,11 +70,14 @@ builder.Services.RegisterInfrastureDependencies(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 
